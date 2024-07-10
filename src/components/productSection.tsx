@@ -22,8 +22,8 @@ const ProductSection = () => {
       </div>
       <div className="overflow-hidden flex justify-center">
         <div className="flex gap-5 overflow-x-scroll lg:max-w-[90vw] md:max-w-[85vw] max-w-[80vw] mt-10  rounded-md border space-x-2 space-y-2 p-2">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Card className="w-56 h-96 min-w-56">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Card className="w-56 h-96 min-w-56" key={i}>
               <CardContent className="flex items-center justify-center p-6"></CardContent>
             </Card>
           ))}
