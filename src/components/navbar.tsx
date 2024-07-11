@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Logo from "./logo";
-import { Moon, Sun } from "lucide-react";
+import { Copy, Moon, Sun } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -31,6 +31,17 @@ import { AlignJustify, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 const companyArray = [
   {
@@ -84,12 +95,15 @@ const resourcesArray = [
 ];
 
 const Navbar = () => {
+  const [search, setSearch] = useState<string | undefined>();
   return (
     <div className="flex justify-center">
       <div className="max-w-[88rem] fixed w-full bg-white dark:bg-gray-950 border-b py-2 lg:px-8 md:px-5 px-2 flex justify-between z-50">
         <div className="flex gap-5 items-center justify-between">
           <div className="mr-12">
-            <Logo />
+            <Link href="/">
+              <Logo />
+            </Link>
           </div>
           <div className="lg:hidden md:flex hidden gap-5">
             <NavigationWrapper>
@@ -116,13 +130,46 @@ const Navbar = () => {
             </Button>
             <Button variant="ghost">Contact sales</Button>
           </div>
-          <Button variant="ghost" size="icon">
-            <Search />
-          </Button>
+          {/* Dialog */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Search />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Search</DialogTitle>
+                <DialogDescription>
+                  Search for you required resources...
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex items-center space-x-2">
+                <div className="grid flex-1 gap-2">
+                  <Label htmlFor="link" className="sr-only">
+                    Link
+                  </Label>
+                  <Input
+                    id="link"
+                    placeholder="best ui library..."
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                  />
+                </div>
+                <Button type="submit" size="sm" className="px-3">
+                  <span className="sr-only">Search</span>
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+              <DialogFooter className="sm:justify-start"></DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {/* Dialog */}
+
           <ThemeButton />
           <div className="md:hidden">
             <Sheet>
-              <SheetTrigger>
+              <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <AlignJustify />
                 </Button>
