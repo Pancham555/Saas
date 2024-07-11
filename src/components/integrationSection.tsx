@@ -1,22 +1,29 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardHeader } from "./ui/card";
 import Image from "next/image";
-import Blob from "./blob";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-
+import Amazonwebservices from "./icons/amazonwebservices";
+import Figma from "./icons/figma";
+import Firebase from "./icons/firebase";
+import Github from "./icons/github";
+import Netlify from "./icons/netlify";
+import Notion from "./icons/notion";
+import Railway from "./icons/railway";
+import Slack from "./icons/slack";
+import Supabase from "./icons/supabase";
+import Vercel from "./icons/vercel";
 const IntegrationSection = () => {
   const icons = [
-    require("../../public/icons/amazonwebservices.svg"),
-    require("../../public/icons/figma.svg"),
-    require("../../public/icons/firebase.svg"),
-    require("../../public/icons/github.svg"),
-    require("../../public/icons/netlify.svg"),
-    require("../../public/icons/notion.svg"),
-    require("../../public/icons/railway.svg"),
-    require("../../public/icons/slack.svg"),
-    require("../../public/icons/supabase.svg"),
-    require("../../public/icons/vercel.svg"),
+    Amazonwebservices,
+    Figma,
+    Firebase,
+    Github,
+    Netlify,
+    Notion,
+    Railway,
+    Slack,
+    Supabase,
+    Vercel,
   ];
   return (
     <div className="relative">
@@ -48,19 +55,31 @@ const IntegrationSection = () => {
           </Button>
           <div className="hidden md:flex flex-col gap-5 items-center justify-center">
             <div className="grid grid-cols-4 gap-5 md:max-w-xl md:ml-10">
-              {icons.slice(0, 4).map((_, i) => {
-                return <BoxCards key={i} icon={_} />;
+              {icons.slice(0, 4).map((Icon, i) => {
+                return (
+                  <BoxCards key={i}>
+                    <Icon />
+                  </BoxCards>
+                );
               })}
             </div>
             <div className="grid grid-cols-4 gap-5 md:max-w-xl md:mr-10">
-              {icons.slice(5, 9).map((_, i) => {
-                return <BoxCards key={i} icon={_} />;
+              {icons.slice(5, 9).map((Icon, i) => {
+                return (
+                  <BoxCards key={i}>
+                    <Icon />
+                  </BoxCards>
+                );
               })}
             </div>
           </div>
           <div className="md:hidden grid grid-cols-3 gap-5 md:max-w-xl md:ml-10">
-            {icons.map((_, i) => {
-              return <BoxCards key={i} icon={_} />;
+            {icons.map((Icon, i) => {
+              return (
+                <BoxCards key={i}>
+                  <Icon />
+                </BoxCards>
+              );
             })}
           </div>
         </div>
@@ -69,17 +88,18 @@ const IntegrationSection = () => {
   );
 };
 
-const BoxCards = ({ icon }: { icon: string | StaticImport }) => {
+const BoxCards = ({ children }: { children: React.ReactNode }) => {
   return (
     <Card className="w-20 h-20 relative overflow-hidden">
       <CardHeader className="w-full h-full">
-        <Image
+        {children}
+        {/* <Image
           src={icon}
           alt="integration apps"
           height={200}
           width={200}
           className="w-full h-full object-cover"
-        />
+        /> */}
       </CardHeader>
     </Card>
   );

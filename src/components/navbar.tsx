@@ -56,7 +56,12 @@ const Navbar = () => {
         </div>
         <div className="flex gap-5 items-center">
           <div className="md:flex gap-5 items-center hidden">
-            <Button variant="outline">Get Demo</Button>
+            <Button
+              variant="outline"
+              className="border-green-600 text-green-600 hover:text-green-600"
+            >
+              Get Demo
+            </Button>
             <Button variant="ghost">Contact sales</Button>
           </div>
           <Button variant="ghost" size="icon">

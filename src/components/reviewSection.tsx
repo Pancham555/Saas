@@ -17,10 +17,14 @@ const ReviewSection = () => {
       <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
         <div className="flex gap-5 flex-col">
           <h2 className="max-w-96 font-semibold text-3xl">
-            Here&apos;s what our customer has to say
+            Here&apos;s what our{" "}
+            <span className="text-green-600">customer</span> has to say
           </h2>
           <div className="">
-            <Button variant="outline" className="rounded-full ">
+            <Button
+              variant="outline"
+              className="rounded-full text-green-600 hover:text-green-600"
+            >
               Read customer stories
             </Button>
           </div>

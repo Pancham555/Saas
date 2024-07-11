@@ -28,10 +28,15 @@ export default function HeroSection() {
             </p>
             {/* Buttons */}
             <div className="mt-7 grid gap-3 w-full sm:inline-flex">
-              <div className="border-l-2 pl-2 w-48 text-[12px]">
+              <div className="border-l-2 pl-2 w-48 text-[12px] text-green-500 border-green-500 font-medium">
                 Start work efficiently with UIFry SaaS product
               </div>
-              <Button size={"lg"}>Get a Free Demo</Button>
+              <Button
+                size={"lg"}
+                className="bg-green-600 text-white hover:bg-green-700"
+              >
+                Get a Free Demo
+              </Button>
             </div>
             {/* End Buttons */}
             <div className="mt-6 lg:mt-10 grid grid-cols-3 gap-x-5">
