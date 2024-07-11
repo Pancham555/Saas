@@ -18,7 +18,7 @@ export default function BottomHeroSection() {
             {/* Buttons */}
             <div className="mt-7 grid gap-3 w-full sm:inline-flex">
               <Button size={"lg"}>Get a Free Demo</Button>
-              <div className="border-l pl-2 w-48 text-[12px]">
+              <div className="border-l-2 pl-2 w-48 text-[12px]">
                 Start work efficiently with UIFry SaaS product
               </div>
             </div>

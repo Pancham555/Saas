@@ -3,8 +3,21 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import Image from "next/image";
 import Blob from "./blob";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 const IntegrationSection = () => {
+  const icons = [
+    require("../../public/icons/amazonwebservices.svg"),
+    require("../../public/icons/figma.svg"),
+    require("../../public/icons/firebase.svg"),
+    require("../../public/icons/github.svg"),
+    require("../../public/icons/netlify.svg"),
+    require("../../public/icons/notion.svg"),
+    require("../../public/icons/railway.svg"),
+    require("../../public/icons/slack.svg"),
+    require("../../public/icons/supabase.svg"),
+    require("../../public/icons/vercel.svg"),
+  ];
   return (
     <div className="relative">
       <Image
@@ -17,7 +30,7 @@ const IntegrationSection = () => {
         quality={100}
       />
       <Image
-        className="absolute right-0 -z-10 top-[5%] w-36"
+        className="absolute right-10 -z-10 top-[5%] w-36"
         src={require("../../public/switch.svg")}
         loading="lazy"
         alt="Hero image"
@@ -33,9 +46,21 @@ const IntegrationSection = () => {
           <Button variant="outline" className="rounded-full">
             See all apps
           </Button>
-          <div className="flex flex-wrap gap-5 max-w-xl">
-            {Array.from({ length: 10 }).map((_, i) => {
-              return <BoxCards key={i} />;
+          <div className="hidden md:flex flex-col gap-5 items-center justify-center">
+            <div className="grid grid-cols-4 gap-5 md:max-w-xl md:ml-10">
+              {icons.slice(0, 4).map((_, i) => {
+                return <BoxCards key={i} icon={_} />;
+              })}
+            </div>
+            <div className="grid grid-cols-4 gap-5 md:max-w-xl md:mr-10">
+              {icons.slice(5, 9).map((_, i) => {
+                return <BoxCards key={i} icon={_} />;
+              })}
+            </div>
+          </div>
+          <div className="md:hidden grid grid-cols-3 gap-5 md:max-w-xl md:ml-10">
+            {icons.map((_, i) => {
+              return <BoxCards key={i} icon={_} />;
             })}
           </div>
         </div>
@@ -44,19 +69,18 @@ const IntegrationSection = () => {
   );
 };
 
-const BoxCards = () => {
+const BoxCards = ({ icon }: { icon: string | StaticImport }) => {
   return (
-    <Card className="w-24 h-24 relative overflow-hidden p-2">
-      <CardHeader></CardHeader>
-      <CardContent>
+    <Card className="w-20 h-20 relative overflow-hidden">
+      <CardHeader className="w-full h-full">
         <Image
-          src={require("../../public/vercel.svg")}
+          src={icon}
           alt="integration apps"
-          height={80}
-          width={80}
-          className="w-20 h-20 absolute inset-1"
+          height={200}
+          width={200}
+          className="w-full h-full object-cover"
         />
-      </CardContent>
+      </CardHeader>
     </Card>
   );
 };
