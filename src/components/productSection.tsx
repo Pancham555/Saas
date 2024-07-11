@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import { ScrollBar, ScrollArea } from "./ui/scroll-area";
 import Image from "next/image";
+import Blob from "./blob";
 const ProductSection = () => {
   const data: string[] = [
     "https://images.unsplash.com/photo-1714852575817-79e1e6ef27e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
@@ -28,7 +29,10 @@ const ProductSection = () => {
     "https://images.unsplash.com/photo-1579567761406-4684ee0c75b6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fHRlY2h8ZW58MHwxfDB8fHww",
   ];
   return (
-    <div className="container py-16">
+    <div className="container py-16 relative">
+      <div className="absolute top-10 md:-top-[30%] lg:-top-2/4 -scale-x-100 -left-28 md:-left-36 right-0 -z-10">
+        <Blob />
+      </div>
       <div className="flex justify-between items-start md:items-end gap-5 md:flex-row flex-col">
         <h2 className="max-w-96 font-semibold text-3xl">
           Choose from over 10+ cutting—edge products
@@ -37,8 +41,8 @@ const ProductSection = () => {
           See all products
         </Button>
       </div>
-      <div className="overflow-hidden flex justify-center mt-20 mb-14">
-        <ScrollArea className="lg:max-w-[90vw] md:max-w-[85vw] max-w-[82vw] h-full whitespace-nowrap rounded-md border">
+      <div className="flex justify-center">
+        <ScrollArea className="bg-white dark:bg-slate-950 overflow-hidden mt-20 mb-14 lg:max-w-[90vw] md:max-w-[85vw] max-w-[82vw] h-full whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-4 p-4">
             {data.map((_, i) => (
               <Card key={i} className="shrink-0 w-64">

@@ -9,7 +9,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -31,6 +30,59 @@ import { Button } from "./ui/button";
 import { AlignJustify, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import Link from "next/link";
+
+const companyArray = [
+  {
+    title: "Owner's Blog",
+    desc: "Read here from the owner of this site.",
+    url: "https://www.zenithstech.com",
+  },
+  {
+    title: "Company's Blog",
+    desc: "Stay Updated for our latest updates.",
+    url: "/blog",
+  },
+  {
+    title: "About us",
+    desc: "Know about our company.",
+    url: "/about",
+  },
+];
+
+const resourcesArray = [
+  {
+    title: "Next Js",
+    desc: "This is the framework, I've used to build this web app.",
+    url: "https://nextjs.org",
+  },
+  {
+    title: "Shadcn",
+    desc: "This is the UI library/component library, I've used.",
+    url: "https://ui.shadcn.com",
+  },
+  {
+    title: "Tailwind css",
+    desc: "This is th Css framework, I've used",
+    url: "https://tailwindcss.com",
+  },
+  {
+    title: "Radix UI",
+    desc: "This is UI library that shadcn uses under the hood.",
+    url: "https://www.radix-ui.com",
+  },
+  {
+    title: "Lucide React",
+    desc: "This is the icon library shadcn uses.",
+    url: "https://lucide.dev",
+  },
+  {
+    title: "Next Themes",
+    desc: "This is the theme library, shadcn uses to enable it's light mode and darkmode functionality.",
+    url: "https://github.com/pacocoursey/next-themes",
+  },
+];
+
 const Navbar = () => {
   return (
     <div className="flex justify-center">
@@ -54,8 +106,8 @@ const Navbar = () => {
             </NavigationWrapper>
           </div>
         </div>
-        <div className="flex gap-5 items-center">
-          <div className="md:flex gap-5 items-center hidden">
+        <div className="flex gap-3.5 items-center">
+          <div className="md:flex gap-3.5 items-center hidden">
             <Button
               variant="outline"
               className="border-green-600 text-green-600 hover:text-green-600"
@@ -186,19 +238,25 @@ const Resources = () => {
         <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
         <NavigationMenuContent>
           <div className="grid grid-cols-2 p-4 w-[32rem]">
-            {["", "", "", "", "", ""].map((_, i) => {
+            {resourcesArray.map((data, i) => {
               return (
-                <NavigationMenuLink key={i}>
+                <NavigationMenuLink
+                  key={i}
+                  href={data.url}
+                  target={
+                    data.url.startsWith("https://") ? "_blank" : undefined
+                  }
+                >
                   <div
                     className={cn(
                       "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     )}
                   >
                     <div className="text-sm font-medium leading-none">
-                      Title
+                      {data.title}
                     </div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit...
+                      {data.desc}
                     </p>
                   </div>
                 </NavigationMenuLink>
@@ -218,19 +276,25 @@ const Company = () => {
         <NavigationMenuTrigger>Company</NavigationMenuTrigger>
         <NavigationMenuContent>
           <div className="grid grid-cols-2 p-4 w-[32rem]">
-            {["", "", "", "", "", ""].map((_, i) => {
+            {companyArray.map((data, i) => {
               return (
-                <NavigationMenuLink key={i}>
+                <NavigationMenuLink
+                  key={i}
+                  href={data.url}
+                  target={
+                    data.url.startsWith("https://") ? "_blank" : undefined
+                  }
+                >
                   <div
                     className={cn(
                       "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     )}
                   >
                     <div className="text-sm font-medium leading-none">
-                      Title
+                      {data.title}
                     </div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit...
+                      {data.desc}
                     </p>
                   </div>
                 </NavigationMenuLink>
@@ -250,19 +314,25 @@ const More = () => {
         <NavigationMenuTrigger>More</NavigationMenuTrigger>
         <NavigationMenuContent>
           <div className="grid grid-cols-2 p-4 w-[32rem]">
-            {["", "", "", "", "", ""].map((_, i) => {
+            {[...resourcesArray, ...companyArray].map((data, i) => {
               return (
-                <NavigationMenuLink key={i}>
+                <NavigationMenuLink
+                  key={i}
+                  href={data.url}
+                  target={
+                    data.url.startsWith("https://") ? "_blank" : undefined
+                  }
+                >
                   <div
                     className={cn(
                       "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     )}
                   >
                     <div className="text-sm font-medium leading-none">
-                      Title
+                      {data.title}
                     </div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit...
+                      {data.desc}
                     </p>
                   </div>
                 </NavigationMenuLink>
@@ -335,19 +405,23 @@ const SmallResources = () => {
       <AccordionTrigger>Resources</AccordionTrigger>
       <AccordionContent>
         <div className="grid grid-cols-1">
-          {["", "", "", "", "", ""].map((_, i) => {
+          {resourcesArray.map((data, i) => {
             return (
-              <div
+              <Link
+                href={data.url}
+                target={data.url.startsWith("https://") ? "_blank" : undefined}
                 key={i}
                 className={cn(
                   "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 )}
               >
-                <div className="text-sm font-medium leading-none">Title</div>
+                <div className="text-sm font-medium leading-none">
+                  {data.title}
+                </div>
                 <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit...
+                  {data.desc}
                 </p>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -362,19 +436,23 @@ const SmallCompany = () => {
       <AccordionTrigger>Company</AccordionTrigger>
       <AccordionContent>
         <div className="grid grid-cols-1">
-          {["", "", "", "", "", ""].map((_, i) => {
+          {companyArray.map((data, i) => {
             return (
-              <div
+              <Link
+                href={data.url}
+                target={data.url.startsWith("https://") ? "_blank" : undefined}
                 key={i}
                 className={cn(
                   "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 )}
               >
-                <div className="text-sm font-medium leading-none">Title</div>
+                <div className="text-sm font-medium leading-none">
+                  {data.title}
+                </div>
                 <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit...
+                  {data.desc}
                 </p>
-              </div>
+              </Link>
             );
           })}
         </div>

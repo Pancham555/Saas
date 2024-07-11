@@ -36,26 +36,46 @@ const IntegrationSection = () => {
         height={500}
         quality={100}
       />
-      <Image
-        className="absolute right-10 -z-10 top-[5%] w-36"
-        src={require("../../public/switch.svg")}
-        loading="lazy"
-        alt="Hero image"
-        width={500}
-        height={500}
-        quality={100}
-      />
-      <div className="container py-28">
-        <div className="flex flex-col items-center gap-8">
-          <h2 className="text-4xl font-semibold text-center max-w-72">
-            Most popular integration apps
-          </h2>
-          <Button variant="outline" className="rounded-full">
-            See all apps
-          </Button>
-          <div className="hidden md:flex flex-col gap-5 items-center justify-center">
-            <div className="grid grid-cols-4 gap-5 md:max-w-xl md:ml-10">
-              {icons.slice(0, 4).map((Icon, i) => {
+      <div className="relative overflow-hidden">
+        <Image
+          className="absolute -right-10 -z-10 top-[5%] w-36"
+          src={require("../../public/switch.svg")}
+          loading="lazy"
+          alt="Hero image"
+          width={500}
+          height={500}
+          quality={100}
+        />
+        <div className="container py-28">
+          <div className="flex flex-col items-center gap-8">
+            <h2 className="text-4xl font-semibold text-center max-w-72">
+              Most popular integration apps
+            </h2>
+            <Button variant="outline" className="rounded-full">
+              See all apps
+            </Button>
+            <div className="hidden md:flex flex-col gap-5 items-center justify-center">
+              <div className="grid grid-cols-4 gap-5 md:max-w-xl md:ml-10">
+                {icons.slice(0, 4).map((Icon, i) => {
+                  return (
+                    <BoxCards key={i}>
+                      <Icon />
+                    </BoxCards>
+                  );
+                })}
+              </div>
+              <div className="grid grid-cols-4 gap-5 md:max-w-xl md:mr-10">
+                {icons.slice(5, 9).map((Icon, i) => {
+                  return (
+                    <BoxCards key={i}>
+                      <Icon />
+                    </BoxCards>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="md:hidden grid grid-cols-3 gap-5 md:max-w-xl md:ml-10">
+              {icons.map((Icon, i) => {
                 return (
                   <BoxCards key={i}>
                     <Icon />
@@ -63,24 +83,6 @@ const IntegrationSection = () => {
                 );
               })}
             </div>
-            <div className="grid grid-cols-4 gap-5 md:max-w-xl md:mr-10">
-              {icons.slice(5, 9).map((Icon, i) => {
-                return (
-                  <BoxCards key={i}>
-                    <Icon />
-                  </BoxCards>
-                );
-              })}
-            </div>
-          </div>
-          <div className="md:hidden grid grid-cols-3 gap-5 md:max-w-xl md:ml-10">
-            {icons.map((Icon, i) => {
-              return (
-                <BoxCards key={i}>
-                  <Icon />
-                </BoxCards>
-              );
-            })}
           </div>
         </div>
       </div>
@@ -91,16 +93,7 @@ const IntegrationSection = () => {
 const BoxCards = ({ children }: { children: React.ReactNode }) => {
   return (
     <Card className="w-20 h-20 relative overflow-hidden">
-      <CardHeader className="w-full h-full">
-        {children}
-        {/* <Image
-          src={icon}
-          alt="integration apps"
-          height={200}
-          width={200}
-          className="w-full h-full object-cover"
-        /> */}
-      </CardHeader>
+      <CardHeader className="w-full h-full">{children}</CardHeader>
     </Card>
   );
 };

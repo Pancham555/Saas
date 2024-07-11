@@ -31,9 +31,8 @@ const ReviewSection = () => {
         </div>
         <div className="flex gap-5 max-w-80 items-center">
           <Sparkles size={30} />
-          <p className="w-full line-clamp-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere,
-            iure.
+          <p className="w-full line-clamp-2 font-medium">
+            Our solutions has been proven to solve your Design problems...
           </p>
         </div>
       </div>

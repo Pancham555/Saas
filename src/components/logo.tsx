@@ -18,7 +18,7 @@ const Logo = () => {
           cx="16.1717"
           cy="20.2146"
           r="4.04293"
-          className="fill-white dark:fill-slate-900"
+          className="fill-[#2DDB81]"
         />
       </g>
       <defs>
