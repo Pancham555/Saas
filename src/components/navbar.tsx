@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./logo";
-import { Copy, Moon, Sun } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,7 +27,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { AlignJustify, Search } from "lucide-react";
-import { useTheme } from "next-themes";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import Link from "next/link";
 import {
@@ -42,8 +40,18 @@ import {
 } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import ThemeButton from "./themeButton";
 
-const companyArray = [
+interface ItemArrayProps {
+  title: string;
+  desc?: string;
+  url: string;
+}
+
+const companyArray: ItemArrayProps[] = [
   {
     title: "Owner's Blog",
     desc: "Read here from the owner of this site.",
@@ -61,7 +69,7 @@ const companyArray = [
   },
 ];
 
-const resourcesArray = [
+const resourcesArray: ItemArrayProps[] = [
   {
     title: "Next Js",
     desc: "This is the framework, I've used to build this web app.",
@@ -93,9 +101,26 @@ const resourcesArray = [
     url: "https://github.com/pacocoursey/next-themes",
   },
 ];
-
+interface StateProps {
+  authenticated?: boolean;
+  id?: string;
+  message?: string;
+}
 const Navbar = () => {
   const [search, setSearch] = useState<string | undefined>();
+  const router = useRouter();
+  const [state, setState] = useState<StateProps | undefined>();
+  const checkAuth = async () => {
+    try {
+      const data = await axios.get("/api/protected");
+      setState(await { ...data.data.data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    checkAuth();
+  }, []);
   return (
     <div className="flex justify-center">
       <div className="max-w-[88rem] fixed w-full bg-white dark:bg-gray-950 border-b py-2 lg:px-8 md:px-5 px-2 flex justify-between z-50">
@@ -107,28 +132,38 @@ const Navbar = () => {
           </div>
           <div className="lg:hidden md:flex hidden gap-5">
             <NavigationWrapper>
-              <AboutFry />
+              <Resources />
               <More />
             </NavigationWrapper>
           </div>
           <div className="lg:flex items-center gap-5 md:hidden hidden">
             <NavigationWrapper>
-              <AboutFry />
-              <Features />
               <Resources />
               <Company />
+              <Link href="#">
+                <Button variant="ghost">Tutorials</Button>
+              </Link>
+              <Link href="/pricing">
+                <Button variant="ghost">Pricing</Button>
+              </Link>
             </NavigationWrapper>
           </div>
         </div>
         <div className="flex gap-3.5 items-center">
           <div className="md:flex gap-3.5 items-center hidden">
-            <Button
-              variant="outline"
-              className="border-green-600 text-green-600 hover:text-green-600"
-            >
-              Get Demo
-            </Button>
-            <Button variant="ghost">Contact sales</Button>
+            {state?.authenticated ? (
+              <Button
+                variant="outline"
+                className="border-green-600 text-green-600 hover:text-green-600"
+                onClick={() => router.push("/dashboard")}
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <LoginLink>
+                <Button variant="outline">Login</Button>
+              </LoginLink>
+            )}
           </div>
           {/* Dialog */}
           <Dialog>
@@ -183,10 +218,20 @@ const Navbar = () => {
                   </SheetHeader>
                   <SheetDescription>
                     <AccordionWraper>
-                      <SmallAboutFry />
-                      <SmallFeatures />
                       <SmallResources />
                       <SmallCompany />
+                      <div className="gap-5 my-5 flex flex-col">
+                        <Link href="#">
+                          <Button variant="ghost" className="w-full">
+                            <div className="w-full text-left">Tutorials</div>
+                          </Button>
+                        </Link>
+                        <Link href="/pricing">
+                          <Button variant="ghost" className="w-full">
+                            <div className="w-full text-left">Pricing</div>
+                          </Button>
+                        </Link>
+                      </div>
                     </AccordionWraper>
                   </SheetDescription>
                   <ScrollBar className="w-0 scroll-p-5 scroll-m-5" />
@@ -361,9 +406,13 @@ const More = () => {
         <NavigationMenuTrigger>More</NavigationMenuTrigger>
         <NavigationMenuContent>
           <div className="grid grid-cols-2 p-4 w-[32rem]">
-            {[...resourcesArray, ...companyArray].map((data, i) => {
+            {[
+              ...resourcesArray,
+              ...companyArray,
+              { title: "Pricing", url: "/pricing" },
+            ].map((data, i) => {
               return (
-                <NavigationMenuLink
+                <Link
                   key={i}
                   href={data.url}
                   target={
@@ -379,10 +428,10 @@ const More = () => {
                       {data.title}
                     </div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      {data.desc}
+                      {data?.desc ?? ""}
                     </p>
                   </div>
-                </NavigationMenuLink>
+                </Link>
               );
             })}
           </div>
@@ -508,21 +557,4 @@ const SmallCompany = () => {
   );
 };
 
-const ThemeButton = () => {
-  const { setTheme, resolvedTheme } = useTheme();
-
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={() =>
-        resolvedTheme === "dark" ? setTheme("light") : setTheme("dark")
-      }
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 duration-200" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 duration-200" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  );
-};
 export default Navbar;
