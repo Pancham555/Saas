@@ -28,5 +28,5 @@ export async function GET() {
     });
   }
   prisma.$disconnect();
-  return NextResponse.redirect("http://localhost:3000/dashboard");
+  return NextResponse.redirect(`${process.env.KINDE_SITE_URL}/dashboard`);
 }
