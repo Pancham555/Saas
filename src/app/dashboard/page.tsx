@@ -61,10 +61,12 @@ export default function Dashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${dashboardData?.sales}</div>
+            <div className="text-2xl font-bold">
+              ${dashboardData?.sales ?? 0}
+            </div>
             <p className="text-xs text-muted-foreground">
-              ${dashboardData?.cash_sales} on cash, $
-              {dashboardData?.credit_sales} on credit.
+              ${dashboardData?.cash_sales ?? 0} on cash, $
+              {dashboardData?.credit_sales ?? 0} on credit.
             </p>
           </CardContent>
         </Card>
@@ -75,10 +77,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              +{dashboardData?.inventory._sum.total}
+              +{dashboardData?.inventory._sum.total ?? 0}
             </div>
             <p className="text-xs text-muted-foreground">
-              +{dashboardData?.inventory._count._all} items
+              +{dashboardData?.inventory._count._all ?? 0} items
             </p>
           </CardContent>
         </Card>
@@ -89,10 +91,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              +{dashboardData?.stock._sum.total}
+              +{dashboardData?.stock._sum.total ?? 0}
             </div>
             <p className="text-xs text-muted-foreground">
-              +{dashboardData?.stock._count._all} items
+              +{dashboardData?.stock._count._all ?? 0} items
             </p>
           </CardContent>
         </Card>
@@ -103,10 +105,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              +{dashboardData?.credit_sales}
+              +{dashboardData?.credit_sales ?? 0}
             </div>
             <p className="text-xs text-muted-foreground">
-              ${dashboardData?.cash_sales} cash sales
+              ${dashboardData?.cash_sales ?? 0} cash sales
             </p>
           </CardContent>
         </Card>
@@ -131,7 +133,7 @@ export default function Dashboard() {
                       {data.email}
                     </p>
                   </div>
-                  <div className="ml-auto font-medium">+${data.total}</div>
+                  <div className="ml-auto font-medium">+${data.total ?? 0}</div>
                 </div>
               );
             })}
