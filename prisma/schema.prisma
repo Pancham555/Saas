@@ -8,9 +8,66 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  kindeId   String @unique
-  email     String @unique
+  id        String      @id @default(uuid())
+  kindeId   String      @unique
+  email     String      @unique
   firstName String
   lastName  String
+  inventory Inventory[]
+  stock     Stock[]
+  orders    Order[]
+}
+
+enum Payment {
+  paid
+  unpaid
+}
+
+model Inventory {
+  id             String  @id @default(uuid())
+  public_id      Int     @default(autoincrement())
+  name           String  @unique
+  price          Int
+  quantity       Int
+  total          Int
+  payment_status Payment
+  user           User?   @relation(fields: [userId], references: [id])
+  userId         String? @default(uuid())
+}
+
+model Stock {
+  id             String      @id @default(uuid())
+  public_id      Int         @default(autoincrement())
+  name           String      @unique
+  price          Int
+  quantity       Int
+  total          Int
+  payment_status Payment
+  user           User?       @relation(fields: [userId], references: [id])
+  userId         String?     @default(uuid())
+  order_item     OrderItem[]
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  public_id      Int         @default(autoincrement())
+  name           String
+  email          String      @unique
+  total          Int?
+  payment_status Payment
+  items          OrderItem[]
+  user           User?       @relation(fields: [userId], references: [id])
+  userId         String?
+}
+
+model OrderItem {
+  id            String  @id @default(uuid())
+  name          String
+  price         Int
+  quantity      Int
+  total         Int
+  original_item Stock?  @relation(fields: [stockId], references: [id])
+  order         Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  stockId       String?
+  orderId       String?
 }

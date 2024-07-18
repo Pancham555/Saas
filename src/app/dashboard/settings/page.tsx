@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,35 +20,38 @@ export default function Settings() {
   const user = useSelector((state: RootState) => state.reducer);
   const [frontUser, setFrontUser] = useState({
     id: "",
+    kindeId: "",
     firstName: "",
     lastName: "",
     email: "",
   });
+  const { toast } = useToast();
   const onSave = async () => {
     try {
-      const save = await axios.post(
+      await axios.post(
         "/api/settings",
         {
-          id: frontUser.id,
-          firstName: frontUser.firstName,
-          lastName: frontUser.lastName,
-          email: frontUser.email,
+          ...frontUser,
         },
         { withCredentials: true }
       );
-      console.log(save.data, "data");
+      toast({
+        title: "Data updated",
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
+  const InitialData = async () => {
+    try {
+      const data = await axios.get(`/api/settings?id=${user.id}`);
+
+      setFrontUser(data.data.data);
+    } catch (error) {}
+  };
   useEffect(() => {
-    setFrontUser({
-      id: user.id,
-      firstName: user.given_name,
-      lastName: user.family_name,
-      email: user.email,
-    });
+    InitialData();
   }, []);
 
   return (

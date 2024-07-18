@@ -13,12 +13,14 @@ export const columns: ColumnDef<Payment>[] = [
   {
     id: "select",
     header: ({ table }) => <CheckboxHeading table={table} />,
-    cell: ({ row }) => <CheckBoxCell row={row} />,
+    cell: ({ row }) => {
+      return <CheckBoxCell row={row} />;
+    },
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "status",
+    accessorKey: "payment_status",
     header: "Status",
   },
 
@@ -29,12 +31,17 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
+    accessorKey: "quantity",
+    header: "Quantity",
+  },
+  {
     accessorKey: "price",
     header: () => <PriceTitle />,
     cell: ({ row }) => {
       return <FormattedPrice row={row} />;
     },
   },
+
   {
     id: "actions",
     enableHiding: false,

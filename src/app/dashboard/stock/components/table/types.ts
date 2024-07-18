@@ -1,8 +1,11 @@
 export type Payment = {
   id?: string;
+  public_id?: number;
   name?: string;
   price?: number | string;
-  status?: "paid" | "unpaid";
+  quantity?: number;
+  total?: number;
+  payment_status?: "paid" | "unpaid";
 };
 
 export const payments: Payment[] = [
@@ -10,12 +13,12 @@ export const payments: Payment[] = [
     id: "728ed52f",
     name: "Abraham Lincoln",
     price: 100,
-    status: "paid",
+    payment_status: "paid",
   },
   {
     id: "698ed52f",
     name: "Jonny Depp",
     price: 100,
-    status: "unpaid",
+    payment_status: "unpaid",
   },
 ];

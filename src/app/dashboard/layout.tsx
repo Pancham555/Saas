@@ -39,7 +39,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import ThemeButton from "@/components/themeButton";
 
 import { useDispatch, useSelector } from "react-redux";
-import { change, State } from "../auth";
+import { change } from "../redux_slices/auth";
 import { RootState } from "../store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface StateProps {
