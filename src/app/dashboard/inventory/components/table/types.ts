@@ -2,7 +2,7 @@ export type Payment = {
   id?: string;
   public_id?: number;
   name?: string;
-  price?: number | string;
+  price?: number;
   quantity?: number;
   total?: number;
   payment_status?: "paid" | "unpaid";

@@ -15,10 +15,12 @@ import { Payment } from "./table/types";
 export default function TableComponent({
   items,
   deleteItem,
+  updateItem,
   sum,
 }: {
   items: Payment[];
   deleteItem: Function;
+  updateItem: Function;
   sum: number;
 }) {
   return (
@@ -51,6 +53,7 @@ export default function TableComponent({
                   <TableCell className="text-right">
                     <DropDown
                       id={data.id}
+                      updateItem={() => updateItem({ id: `${data.id}` })}
                       deleteItem={() => deleteItem({ id: `${data.id}` })}
                     />
                   </TableCell>

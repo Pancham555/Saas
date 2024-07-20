@@ -21,6 +21,8 @@ export default function Stock() {
   const [item, setItem] = useState<Payment | undefined>({
     payment_status: "paid",
   });
+  const [update, setUpdate] = useState(false);
+  const [updateId, setUpdateId] = useState("");
   const [items, setItems] = useState<Payment[]>([]);
   const pageSize = 3;
   const [dataPresent, setDataPresent] = useState<boolean>(false);
@@ -96,6 +98,27 @@ export default function Stock() {
     }
   };
 
+  const updateItem = async () => {
+    setDialogTrigger(false);
+    try {
+      await axios.put("/api/stock", {
+        id: user.id,
+        stockId: updateId,
+        ...item,
+      });
+      toast({ title: "Item has been updated" });
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdate(false);
+    setItem({
+      name: "",
+      price: undefined,
+      quantity: undefined,
+      payment_status: undefined,
+    });
+  };
+
   useEffect(() => {
     getInitialData();
     // paginationNums.skip === 0
@@ -139,8 +162,10 @@ export default function Stock() {
     <>
       <ItemForm
         AddData={AddData}
+        updateItem={updateItem}
         // @ts-ignore
         item={item}
+        update={update}
         dialogTrigger={dialogTrigger}
         setDialogTrigger={setDialogTrigger}
         setItem={setItem}
@@ -159,6 +184,20 @@ export default function Stock() {
             <PageSize />
             <TableComponent
               deleteItem={deleteItem}
+              updateItem={({ id }: { id: string }) => {
+                setUpdate(true);
+                setDialogTrigger(true);
+                const filterItem = items.filter(
+                  (listOfItems) => listOfItems.id === id
+                )[0];
+                setItem({
+                  name: filterItem.name,
+                  price: filterItem.price,
+                  quantity: filterItem.quantity,
+                  payment_status: filterItem.payment_status,
+                });
+                setUpdateId(id);
+              }}
               // @ts-ignore
               items={items}
               sum={sum}

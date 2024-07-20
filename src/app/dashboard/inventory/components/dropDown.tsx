@@ -12,9 +12,11 @@ import { MoreHorizontal } from "lucide-react";
 export default function DropDown({
   id,
   deleteItem,
+  updateItem,
 }: {
   id?: string;
   deleteItem?: Function;
+  updateItem?: Function;
 }) {
   return (
     <DropdownMenu>
@@ -34,6 +36,9 @@ export default function DropDown({
         <DropdownMenuSeparator />
         {/* <DropdownMenuItem>View customer</DropdownMenuItem>
         <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+        <DropdownMenuItem onClick={() => (updateItem ? updateItem() : null)}>
+          Update payment details
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => (deleteItem ? deleteItem() : null)}>
           Delete payment details
         </DropdownMenuItem>

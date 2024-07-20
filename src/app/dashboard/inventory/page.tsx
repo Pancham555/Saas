@@ -22,6 +22,8 @@ const Inventory = () => {
   const [item, setItem] = useState<Payment | undefined>({
     payment_status: "paid",
   });
+  const [update, setUpdate] = useState(false);
+  const [updateId, setUpdateId] = useState("");
   const [items, setItems] = useState<Payment[]>([]);
   const pageSize = 3;
   const [dataPresent, setDataPresent] = useState<boolean>(false);
@@ -77,6 +79,7 @@ const Inventory = () => {
         name: "",
         price: undefined,
         quantity: undefined,
+        payment_status: undefined,
       });
     } catch (error) {
       console.log(error);
@@ -98,6 +101,27 @@ const Inventory = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const updateItem = async () => {
+    setDialogTrigger(false);
+    try {
+      await axios.put("/api/inventory", {
+        id: user.id,
+        inventoryId: updateId,
+        ...item,
+      });
+      toast({ title: "Item has been updated" });
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdate(false);
+    setItem({
+      name: "",
+      price: undefined,
+      quantity: undefined,
+      payment_status: undefined,
+    });
   };
 
   useEffect(() => {
@@ -131,8 +155,10 @@ const Inventory = () => {
     <>
       <ItemForm
         AddData={AddData}
+        updateItem={updateItem}
         // @ts-ignore
         item={item}
+        update={update}
         dialogTrigger={dialogTrigger}
         setDialogTrigger={setDialogTrigger}
         setItem={setItem}
@@ -141,7 +167,14 @@ const Inventory = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold md:text-2xl">Inventory</h1>
           {items.length === 0 ? null : (
-            <Button onClick={() => setDialogTrigger(true)}>Add item</Button>
+            <Button
+              onClick={() => {
+                setUpdate(false);
+                setDialogTrigger(true);
+              }}
+            >
+              Add item
+            </Button>
           )}
         </div>
         {!dataPresent ? (
@@ -151,6 +184,20 @@ const Inventory = () => {
             <PageSize />
             <TableComponent
               deleteItem={deleteItem}
+              updateItem={({ id }: { id: string }) => {
+                setUpdate(true);
+                setDialogTrigger(true);
+                const filterItem = items.filter(
+                  (listOfItems) => listOfItems.id === id
+                )[0];
+                setItem({
+                  name: filterItem.name,
+                  price: filterItem.price,
+                  quantity: filterItem.quantity,
+                  payment_status: filterItem.payment_status,
+                });
+                setUpdateId(id);
+              }}
               // @ts-ignore
               items={items}
               sum={sum}

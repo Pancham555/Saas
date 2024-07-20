@@ -20,7 +20,7 @@ import React from "react";
 
 interface ItemProps {
   name: string;
-  price: string | number;
+  price: number;
   quantity: number;
   payment_status: "paid" | "unpaid";
 }
@@ -29,21 +29,27 @@ export default function ItemForm({
   dialogTrigger,
   setDialogTrigger,
   item,
+  update,
   setItem,
   AddData,
+  updateItem,
 }: {
   dialogTrigger: boolean;
   setDialogTrigger: (open: boolean) => void;
   item: ItemProps;
+  update: boolean;
   setItem: Function;
   AddData: Function;
+  updateItem: Function;
 }) {
   return (
     <Dialog open={dialogTrigger} onOpenChange={setDialogTrigger}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add Item</DialogTitle>
-          <DialogDescription>Add items to your inventory.</DialogDescription>
+          <DialogTitle>{!update ? "Add" : "Update"} Item</DialogTitle>
+          <DialogDescription>
+            {!update ? "Add" : "Update"} items to your inventory.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -105,8 +111,13 @@ export default function ItemForm({
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={() => AddData()}>
-            Add
+          <Button
+            type="submit"
+            onClick={() => {
+              !update ? AddData() : updateItem();
+            }}
+          >
+            {!update ? "Add" : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

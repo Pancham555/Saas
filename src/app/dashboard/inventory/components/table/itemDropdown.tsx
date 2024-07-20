@@ -17,9 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function ItemDropdown({ id }: { id: string }) {
   const user = useSelector((state: RootState) => state.reducer);
-  const inventoryDeleteId = useSelector(
-    (state: RootState) => state.inventoryDelete.value
-  );
+  // const inventoryDeleteId = useSelector(
+  //   (state: RootState) => state.inventoryDelete.value
+  // );
   const dispatch = useDispatch();
   const { toast } = useToast();
 

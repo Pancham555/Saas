@@ -61,3 +61,25 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ data: insert });
 }
+
+export async function PUT(req: NextRequest) {
+  const { name, price, quantity, payment_status, id, inventoryId } =
+    await req.json();
+
+  const user = await prisma.user.findUnique({
+    where: { kindeId: id },
+  });
+
+  const update = await prisma.inventory.update({
+    where: { userId: user?.id, id: inventoryId },
+    data: {
+      name,
+      price: Number(price),
+      quantity: Number(quantity),
+      payment_status,
+      total: Number(price) * Number(quantity),
+    },
+  });
+
+  return NextResponse.json({ data: update });
+}
