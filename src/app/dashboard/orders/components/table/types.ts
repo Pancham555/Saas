@@ -3,10 +3,12 @@ export type Payment = {
   public_id?: number;
   name?: string;
   email?: string;
-  quantity?: number;
   total?: number;
   amount?: number | string;
   payment_status?: "paid" | "unpaid";
+  items: [];
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export const payments: Payment[] = [
@@ -16,6 +18,9 @@ export const payments: Payment[] = [
     email: "m@example.com",
     amount: 100,
     payment_status: "paid",
+    items: [],
+    createdAt: "string",
+    updatedAt: "string",
   },
   {
     id: "698ed52f",
@@ -23,5 +28,8 @@ export const payments: Payment[] = [
     email: "g@example.com",
     amount: 100,
     payment_status: "unpaid",
+    items: [],
+    createdAt: "string",
+    updatedAt: "string",
   },
 ];

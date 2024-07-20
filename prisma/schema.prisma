@@ -16,6 +16,7 @@ model User {
   inventory Inventory[]
   stock     Stock[]
   orders    Order[]
+  createdAt DateTime    @default(now())
 }
 
 enum Payment {
@@ -24,28 +25,31 @@ enum Payment {
 }
 
 model Inventory {
-  id             String  @id @default(uuid())
-  public_id      Int     @default(autoincrement())
-  name           String  @unique
+  id             String   @id @default(uuid())
+  public_id      Int      @default(autoincrement())
+  name           String   @unique
   price          Int
   quantity       Int
   total          Int
   payment_status Payment
-  user           User?   @relation(fields: [userId], references: [id])
-  userId         String? @default(uuid())
+  user           User?    @relation(fields: [userId], references: [id])
+  userId         String?  @default(uuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Stock {
-  id             String      @id @default(uuid())
-  public_id      Int         @default(autoincrement())
-  name           String      @unique
-  price          Int
-  quantity       Int
-  total          Int
-  payment_status Payment
-  user           User?       @relation(fields: [userId], references: [id])
-  userId         String?     @default(uuid())
-  order_item     OrderItem[]
+  id         String      @id @default(uuid())
+  public_id  Int         @default(autoincrement())
+  name       String      @unique
+  price      Int
+  quantity   Int
+  total      Int
+  user       User?       @relation(fields: [userId], references: [id])
+  userId     String?     @default(uuid())
+  order_item OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Order {
@@ -58,16 +62,19 @@ model Order {
   items          OrderItem[]
   user           User?       @relation(fields: [userId], references: [id])
   userId         String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model OrderItem {
-  id            String  @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
   price         Int
   quantity      Int
   total         Int
-  original_item Stock?  @relation(fields: [stockId], references: [id])
-  order         Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  original_item Stock?   @relation(fields: [stockId], references: [id])
+  order         Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   stockId       String?
   orderId       String?
+  createdAt     DateTime @default(now())
 }

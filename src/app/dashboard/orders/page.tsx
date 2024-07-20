@@ -1,62 +1,3 @@
-// "use client";
-// import React, { useState } from "react";
-// import { Payment } from "./components/table/types";
-// import DataTable from "./components/table/data-table";
-// import { columns } from "./components/table/columns";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-// } from "@/components/ui/dialog";
-// import { Label } from "@/components/ui/label";
-// import { Input } from "@/components/ui/input";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import NoDataFound from "./components/noDataFound";
-// import ItemForm from "./components/itemForm";
-
-// const Orders = () => {
-//   const [dialogTrigger, setDialogTrigger] = useState(false);
-//   const [item, setItem] = useState<Payment | undefined>({
-//     payment_status: "paid",
-//   });
-//   const [items, setItems] = useState<Payment[]>([]);
-//   return (
-//     <>
-//       <ItemForm
-//         dialogTrigger={dialogTrigger}
-//         setDialogTrigger={setDialogTrigger}
-//         // @ts-ignore
-//         item={item}
-//         setItem={setItem}
-//       />
-//       <main className="py-14 flex flex-1 flex-col gap-4 m-5 lg:gap-6">
-//         {items.length === 0 ? (
-//           <NoDataFound onAdd={() => setDialogTrigger(true)} />
-//         ) : (
-//           <>
-//             <div className="flex justify-end">
-//               <Button onClick={() => setDialogTrigger(true)}>Add order</Button>
-//             </div>
-//             <DataTable columns={columns} data={items} />
-//           </>
-//         )}
-//       </main>
-//     </>
-//   );
-// };
-
-// export default Orders;
-
 "use client";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
@@ -80,7 +21,10 @@ const Orders = () => {
   const [dialogTrigger, setDialogTrigger] = useState(false);
   const [item, setItem] = useState<Payment | undefined>({
     payment_status: "paid",
+    items: [],
   });
+  const [update, setUpdate] = useState(false);
+  const [updateId, setUpdateId] = useState("");
   const [items, setItems] = useState<Payment[]>([]);
   const [stock, setStock] = useState([]);
   const [sendStockList, setSendStockList] = useState([]);
@@ -140,6 +84,8 @@ const Orders = () => {
         email: "",
         amount: undefined,
         payment_status: undefined,
+        createdAt: undefined,
+        items: [],
       });
     } catch (error) {
       console.log(error);
@@ -161,6 +107,29 @@ const Orders = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const updateItem = async () => {
+    setDialogTrigger(false);
+
+    try {
+      await axios.put("/api/orders", {
+        id: user.id,
+        orderId: updateId,
+        order_items: sendStockList,
+        ...item,
+      });
+      toast({ title: "Item has been updated" });
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdate(false);
+    setItem({
+      name: "",
+      email: undefined,
+      payment_status: undefined,
+      items: [],
+    });
   };
 
   useEffect(() => {
@@ -197,8 +166,10 @@ const Orders = () => {
     <>
       <ItemForm
         AddData={AddData}
+        updateItem={updateItem}
         // @ts-ignore
         item={item}
+        update={update}
         dialogTrigger={dialogTrigger}
         setDialogTrigger={setDialogTrigger}
         setItem={setItem}
@@ -221,6 +192,22 @@ const Orders = () => {
             <PageSize />
             <TableComponent
               deleteItem={deleteItem}
+              updateItem={({ id }: { id: string }) => {
+                setUpdate(true);
+                setDialogTrigger(true);
+                const filterItem = items.filter(
+                  (listOfItems) => listOfItems.id === id
+                )[0];
+                setItem({
+                  name: filterItem.name,
+                  email: filterItem.email,
+                  payment_status: filterItem.payment_status,
+                  items: filterItem.items,
+                  createdAt: filterItem.createdAt,
+                });
+                setUpdateId(id);
+                setSendStockList(filterItem.items);
+              }}
               // @ts-ignore
               items={items}
               sum={sum}

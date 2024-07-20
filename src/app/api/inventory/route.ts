@@ -39,7 +39,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, price, quantity, payment_status, userId } = await req.json();
+  const { name, price, quantity, payment_status, createdAt, userId } =
+    await req.json();
   if (!name || !price || !quantity || !payment_status || !userId) {
     return NextResponse.json({ message: "Insufficient data!" });
   }
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
           quantity: Number(quantity),
           payment_status,
           total: Number(price) * Number(quantity),
+          createdAt,
         },
       },
     },

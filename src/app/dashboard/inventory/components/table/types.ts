@@ -6,6 +6,8 @@ export type Payment = {
   quantity?: number;
   total?: number;
   payment_status?: "paid" | "unpaid";
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export const payments: Payment[] = [
@@ -14,11 +16,15 @@ export const payments: Payment[] = [
     name: "Abraham Lincoln",
     price: 100,
     payment_status: "paid",
+    createdAt: "string",
+    updatedAt: "string",
   },
   {
     id: "698ed52f",
     name: "Jonny Depp",
     price: 100,
     payment_status: "unpaid",
+    createdAt: "string",
+    updatedAt: "string",
   },
 ];

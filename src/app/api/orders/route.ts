@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
   });
   const data = await prisma.order.findMany({
     where: { userId: id?.id },
+    include: { items: true },
     skip,
     take,
   });
@@ -43,7 +44,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { id, name, email, payment_status, order_items } = await req.json();
+  const { id, name, email, payment_status, createdAt, order_items } =
+    await req.json();
   // const arrayOfItems = JSON.parse(order_items);
   const arrOfItems = order_items.map(
     // @ts-ignore
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest) {
   );
 
   // @ts-ignore
-  const totalSum = arrOfItems.reduce((accumulator, currentObject) => {
+  const total = arrOfItems.reduce((accumulator, currentObject) => {
     return accumulator + currentObject.total;
   }, 0);
 
@@ -60,10 +62,11 @@ export async function POST(req: NextRequest) {
     data: {
       orders: {
         create: {
-          name: name,
-          email: email,
-          payment_status: payment_status,
-          total: totalSum,
+          name,
+          email,
+          createdAt,
+          payment_status,
+          total,
           items: {
             createMany: {
               data: [...arrOfItems],
@@ -73,6 +76,48 @@ export async function POST(req: NextRequest) {
       },
     },
   });
-  // return NextResponse.json({ data: "this" });
+
   return NextResponse.json({ data: createOrder });
+}
+
+export async function PUT(req: NextRequest) {
+  const { name, email, payment_status, id, createdAt, orderId, order_items } =
+    await req.json();
+
+  const arrOfItems = order_items.map(
+    // @ts-ignore
+    ({ id, public_id, payment_status, userId, orderId, ...rest }) => rest
+  );
+  // @ts-ignore
+  const total = arrOfItems.reduce((accumulator, currentObject) => {
+    return accumulator + currentObject.total;
+  }, 0);
+
+  const user = await prisma.user.findUnique({
+    where: { kindeId: id },
+  });
+
+  const update = await prisma.order.update({
+    where: {
+      id: orderId,
+      userId: user?.id,
+    },
+    data: {
+      name,
+      email,
+      payment_status,
+      total,
+      createdAt,
+      items: {
+        deleteMany: {
+          orderId,
+        },
+        createMany: {
+          data: [...arrOfItems],
+        },
+      },
+    },
+  });
+
+  return NextResponse.json({ data: update });
 }

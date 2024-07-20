@@ -14,9 +14,11 @@ import { useRouter } from "next/navigation";
 export default function DropDown({
   id,
   deleteItem,
+  updateItem,
 }: {
   id?: string;
   deleteItem?: Function;
+  updateItem?: Function;
 }) {
   const router = useRouter();
   return (
@@ -40,6 +42,9 @@ export default function DropDown({
           View payment details
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => (updateItem ? updateItem() : null)}>
+          Update payment details
+        </DropdownMenuItem>
         {/* <DropdownMenuItem>View customer</DropdownMenuItem> */}
         <DropdownMenuItem onClick={() => (deleteItem ? deleteItem() : null)}>
           Delete payment details

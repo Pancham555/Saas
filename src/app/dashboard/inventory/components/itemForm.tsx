@@ -1,3 +1,4 @@
+import { DatePicker } from "@/components/datePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +24,7 @@ interface ItemProps {
   price: number;
   quantity: number;
   payment_status: "paid" | "unpaid";
+  createdAt: Date;
 }
 
 export default function ItemForm({
@@ -87,6 +89,19 @@ export default function ItemForm({
               onChange={(e) =>
                 setItem({ ...item, quantity: Number(e.target.value) })
               }
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="date" className="text-right">
+              Date Purchased
+            </Label>
+            <DatePicker
+              className="col-span-3"
+              date={item.createdAt}
+              setDate={(e) => {
+                setItem({ ...item, createdAt: e });
+                return e;
+              }}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">

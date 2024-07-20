@@ -1,3 +1,4 @@
+import { DatePicker } from "@/components/datePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,20 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import React from "react";
 
 interface ItemProps {
   name: string;
   price: string | number;
   quantity: number;
   payment_status: "paid" | "unpaid";
+  createdAt: Date;
 }
 
 export default function ItemForm({
@@ -90,6 +84,19 @@ export default function ItemForm({
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="date" className="text-right">
+              Date Created
+            </Label>
+            <DatePicker
+              className="col-span-3"
+              date={item?.createdAt}
+              setDate={(e) => {
+                setItem({ ...item, createdAt: e });
+                return e;
+              }}
+            />
+          </div>
+          {/* <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="payment_status" className="text-right">
               Payment status
             </Label>
@@ -108,7 +115,7 @@ export default function ItemForm({
                 <SelectItem value="unpaid">Unpaid</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
         </div>
         <DialogFooter>
           <Button

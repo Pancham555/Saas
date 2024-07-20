@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { DatePicker } from "@/components/datePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,6 +24,7 @@ interface ItemProps {
   name: string;
   email: string;
   payment_status: "paid" | "unpaid";
+  createdAt: Date;
   stock: StockItemProps[];
 }
 
@@ -37,29 +38,33 @@ export default function ItemForm({
   dialogTrigger,
   setDialogTrigger,
   item,
+  update,
   setItem,
-  AddData = () => {},
+  AddData,
   stock,
   sendStockList,
   setSendStockList,
+  updateItem,
 }: {
   dialogTrigger: boolean;
   setDialogTrigger: (open: boolean) => void;
   item: ItemProps;
+  update: boolean;
   setItem: Function;
-  AddData?: Function;
+  AddData: Function;
   stock: StockItemProps[];
   sendStockList: StockItemProps[];
   setSendStockList: Function;
+  updateItem: Function;
 }) {
   return (
     <Dialog open={dialogTrigger} onOpenChange={setDialogTrigger}>
       <DialogContent className="sm:max-w-[600px]">
         <ScrollArea className="h-[26rem]">
           <DialogHeader>
-            <DialogTitle>Add an order</DialogTitle>
+            <DialogTitle>{!update ? "Add" : "Update"} an order</DialogTitle>
             <DialogDescription>
-              Add items to your orders list.
+              {!update ? "Add" : "Update"} items to your orders list.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4 mr-5">
@@ -85,7 +90,19 @@ export default function ItemForm({
                 onChange={(e) => setItem({ ...item, email: e.target.value })}
               />
             </div>
-
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="date" className="text-right">
+                Date Ordered
+              </Label>
+              <DatePicker
+                className="col-span-3"
+                date={item?.createdAt}
+                setDate={(e) => {
+                  setItem({ ...item, createdAt: e });
+                  return e;
+                }}
+              />
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="payment_status" className="text-right">
                 Payment status
@@ -212,8 +229,13 @@ export default function ItemForm({
           </div>
         </ScrollArea>
         <DialogFooter className="mr-5">
-          <Button type="submit" onClick={() => AddData()}>
-            Add
+          <Button
+            type="submit"
+            onClick={() => {
+              !update ? AddData() : updateItem();
+            }}
+          >
+            {!update ? "Add" : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

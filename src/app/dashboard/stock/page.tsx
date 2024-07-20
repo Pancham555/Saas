@@ -18,9 +18,7 @@ interface PaginationProps {
 }
 export default function Stock() {
   const [dialogTrigger, setDialogTrigger] = useState(false);
-  const [item, setItem] = useState<Payment | undefined>({
-    payment_status: "paid",
-  });
+  const [item, setItem] = useState<Payment | undefined>();
   const [update, setUpdate] = useState(false);
   const [updateId, setUpdateId] = useState("");
   const [items, setItems] = useState<Payment[]>([]);
@@ -51,13 +49,12 @@ export default function Stock() {
     } catch (error) {
       console.log(error);
     }
-    setDataPresent(true);
   };
   const AddData = async () => {
     setDialogTrigger(false);
-    if (!item?.payment_status) {
-      return toast({ title: "Enter your payment status" });
-    }
+    // if (!item?.payment_status) {
+    //   return toast({ title: "Enter your payment status" });
+    // }
     try {
       const data = await axios.post(
         "/api/stock",
@@ -76,6 +73,7 @@ export default function Stock() {
         name: "",
         price: undefined,
         quantity: undefined,
+        createdAt: undefined,
       });
     } catch (error) {
       console.log(error);
@@ -115,7 +113,6 @@ export default function Stock() {
       name: "",
       price: undefined,
       quantity: undefined,
-      payment_status: undefined,
     });
   };
 
@@ -151,12 +148,9 @@ export default function Stock() {
       });
     }
 
-    // if (items.length <= docCount) {
-    //   setHighLightButtons({
-    //     next: true,
-    //     prev: true,
-    //   });
-    // }
+    if (items.length > 0) {
+      setDataPresent(true);
+    }
   }, [item, paginationNums, docCount, pageSize, sum]);
   return (
     <>
@@ -194,7 +188,6 @@ export default function Stock() {
                   name: filterItem.name,
                   price: filterItem.price,
                   quantity: filterItem.quantity,
-                  payment_status: filterItem.payment_status,
                 });
                 setUpdateId(id);
               }}

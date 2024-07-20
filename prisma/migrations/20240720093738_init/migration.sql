@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -15,12 +16,15 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Inventory" (
     "id" TEXT NOT NULL,
+    "public_id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "total" INTEGER NOT NULL,
     "payment_status" "Payment" NOT NULL,
     "userId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Inventory_pkey" PRIMARY KEY ("id")
 );
@@ -28,12 +32,14 @@ CREATE TABLE "Inventory" (
 -- CreateTable
 CREATE TABLE "Stock" (
     "id" TEXT NOT NULL,
+    "public_id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "payment_status" "Payment" NOT NULL,
+    "total" INTEGER NOT NULL,
     "userId" TEXT,
-    "orderId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Stock_pkey" PRIMARY KEY ("id")
 );
@@ -41,14 +47,30 @@ CREATE TABLE "Stock" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
+    "public_id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
-    "quantity" INTEGER NOT NULL,
+    "total" INTEGER,
     "payment_status" "Payment" NOT NULL,
     "userId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OrderItem" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "total" INTEGER NOT NULL,
+    "stockId" TEXT,
+    "orderId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -73,7 +95,10 @@ ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_userId_fkey" FOREIGN KEY ("use
 ALTER TABLE "Stock" ADD CONSTRAINT "Stock_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Stock" ADD CONSTRAINT "Stock_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_stockId_fkey" FOREIGN KEY ("stockId") REFERENCES "Stock"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;

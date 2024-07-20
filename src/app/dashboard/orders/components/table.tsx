@@ -15,10 +15,12 @@ import { Payment } from "./table/types";
 export default function TableComponent({
   items,
   deleteItem,
+  updateItem,
   sum,
 }: {
   items: Payment[];
   deleteItem: Function;
+  updateItem: Function;
   sum: number;
 }) {
   return (
@@ -27,9 +29,9 @@ export default function TableComponent({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[5%]">Id</TableHead>
+              <TableHead className="w-[15%]">Date</TableHead>
               <TableHead className="w-[10%]">Status</TableHead>
-              <TableHead className="w-[45%]">Name</TableHead>
+              <TableHead className="w-[35%]">Name</TableHead>
               <TableHead className="w-[45%]">Email</TableHead>
 
               <TableHead className="text-right w-[5%]">Total</TableHead>
@@ -38,9 +40,13 @@ export default function TableComponent({
           </TableHeader>
           <TableBody>
             {items?.map((data, i) => {
+              const date = new Date(data.createdAt ?? Date.now());
               return (
                 <TableRow key={i}>
-                  <TableCell>{data.public_id}</TableCell>
+                  <TableCell>
+                    {date.toLocaleString("default", { month: "short" })}{" "}
+                    {date.toLocaleString("default", { year: "2-digit" })}
+                  </TableCell>
                   <TableCell className="font-medium">
                     {data.payment_status === "paid" ? "Paid" : "Unpaid"}
                   </TableCell>
@@ -50,6 +56,7 @@ export default function TableComponent({
                   <TableCell className="text-right">
                     <DropDown
                       id={data.id}
+                      updateItem={() => updateItem({ id: `${data.id}` })}
                       deleteItem={() => deleteItem({ id: `${data.id}` })}
                     />
                   </TableCell>

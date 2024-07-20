@@ -20,6 +20,7 @@ interface DataProps {
   payment_status: "paid" | "unpaid";
   total: number;
   items: ItemProps[];
+  createdAt: string;
 }
 
 interface ItemProps {
@@ -27,11 +28,13 @@ interface ItemProps {
   price: number;
   quantity: number;
   total: number;
+  createdAt: string;
 }
 
 export default function Order() {
   const params = useParams<{ order: string }>();
   const [showData, setShowData] = useState<DataProps>();
+
   const getOrderData = async () => {
     try {
       const data = await axios.get(`/api/orders/order?orderId=${params.order}`);
@@ -41,6 +44,7 @@ export default function Order() {
       console.log(error);
     }
   };
+  const orderedDate = new Date(showData?.createdAt ?? Date.now());
 
   useEffect(() => {
     getOrderData();
@@ -58,6 +62,11 @@ export default function Order() {
             <div className="text-lg font-semibold break-normal">
               {showData?.name}
             </div>
+            <p className="text-xs text-muted-foreground">
+              Ordered on{" "}
+              {orderedDate.toLocaleString("default", { month: "short" })}{" "}
+              {orderedDate.toLocaleString("default", { year: "2-digit" })}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -102,8 +111,8 @@ export default function Order() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[5%]">Id</TableHead>
-              <TableHead className="w-[50%]">Name</TableHead>
+              <TableHead className="w-[15%]">Date</TableHead>
+              <TableHead className="w-[40%]">Name</TableHead>
               <TableHead className="w-[15%] text-right">Price</TableHead>
               <TableHead className="w-[15%] text-right">Quantity</TableHead>
               <TableHead className="w-[15%] text-right">Total</TableHead>
@@ -111,9 +120,14 @@ export default function Order() {
           </TableHeader>
           <TableBody>
             {showData?.items.map((data, i) => {
+              const date = new Date(data.createdAt);
               return (
                 <TableRow key={i}>
-                  <TableCell>{i + 1}</TableCell>
+                  <TableCell>
+                    {" "}
+                    {date.toLocaleString("default", { month: "short" })}{" "}
+                    {date.toLocaleString("default", { year: "2-digit" })}
+                  </TableCell>
                   <TableCell>{data.name}</TableCell>
                   <TableCell className="text-right">{data.price}</TableCell>
                   <TableCell className="text-right">{data.quantity}</TableCell>

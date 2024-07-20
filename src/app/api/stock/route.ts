@@ -39,8 +39,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, price, quantity, payment_status, userId } = await req.json();
-  if (!name || !price || !quantity || !payment_status || !userId) {
+  const { name, price, quantity, createdAt, userId } = await req.json();
+  if (!name || !price || !quantity || !userId) {
     return NextResponse.json({ message: "Insufficient data!" });
   }
 
@@ -52,8 +52,8 @@ export async function POST(req: NextRequest) {
           name,
           price: Number(price),
           quantity: Number(quantity),
-          payment_status,
           total: Number(price) * Number(quantity),
+          createdAt,
         },
       },
     },
@@ -63,8 +63,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const { name, price, quantity, payment_status, id, stockId } =
-    await req.json();
+  const { name, price, quantity, id, stockId } = await req.json();
 
   const user = await prisma.user.findUnique({
     where: { kindeId: id },
@@ -76,7 +75,6 @@ export async function PUT(req: NextRequest) {
       name,
       price: Number(price),
       quantity: Number(quantity),
-      payment_status,
       total: Number(price) * Number(quantity),
     },
   });

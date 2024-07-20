@@ -53,7 +53,6 @@ const Inventory = () => {
     } catch (error) {
       console.log(error);
     }
-    setDataPresent(true);
   };
 
   const AddData = async () => {
@@ -80,6 +79,7 @@ const Inventory = () => {
         price: undefined,
         quantity: undefined,
         payment_status: undefined,
+        createdAt: undefined,
       });
     } catch (error) {
       console.log(error);
@@ -148,6 +148,9 @@ const Inventory = () => {
         next: false,
         prev: false,
       });
+    }
+    if (items.length > 0) {
+      setDataPresent(true);
     }
   }, [item, paginationNums, docCount, pageSize, sum]);
 

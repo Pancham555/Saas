@@ -29,9 +29,9 @@ export default function TableComponent({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[5%]">Id</TableHead>
+              <TableHead className="w-[15%]">Date</TableHead>
               <TableHead className="w-[10%]">Status</TableHead>
-              <TableHead className="w-[45%]">Name</TableHead>
+              <TableHead className="w-[35%]">Name</TableHead>
               <TableHead className="w-[15%]">Price</TableHead>
               <TableHead className="w-[10%]">Quantity</TableHead>
               <TableHead className="text-right w-[5%]">Total</TableHead>
@@ -40,9 +40,14 @@ export default function TableComponent({
           </TableHeader>
           <TableBody>
             {items?.map((data, i) => {
+              const date = new Date(data.createdAt ?? Date.now());
               return (
                 <TableRow key={i}>
-                  <TableCell>{data.public_id}</TableCell>
+                  <TableCell>
+                    {" "}
+                    {date.toLocaleString("default", { month: "short" })}{" "}
+                    {date.toLocaleString("default", { year: "2-digit" })}
+                  </TableCell>
                   <TableCell className="font-medium">
                     {data.payment_status === "paid" ? "Paid" : "Unpaid"}
                   </TableCell>
