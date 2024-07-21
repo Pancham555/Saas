@@ -9,9 +9,9 @@ export async function GET() {
   }
 
   const user = await getUser();
+
   const data = {
     message: "Hello User",
-    id: user?.given_name,
     authenticated: true,
     ...user,
   };

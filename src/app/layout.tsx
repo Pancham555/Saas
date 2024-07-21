@@ -4,8 +4,7 @@ import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { ThemeProvider as NextThemeProvider } from "@/components/theme-provider";
-import { Provider } from "react-redux";
-import { store } from "./store";
+import { UserContextProvider } from "@/context/userCredentials";
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -18,17 +17,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider store={store}>
-      <html lang="en">
-        <head>
-          <link rel="icon" type="image/png" sizes="32x32" href="/logo.svg" />
-        </head>
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
+    <html lang="en">
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo.svg" />
+      </head>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <UserContextProvider>
           <NextThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -38,8 +37,8 @@ export default function RootLayout({
             {children}
             <Toaster />
           </NextThemeProvider>
-        </body>
-      </html>
-    </Provider>
+        </UserContextProvider>
+      </body>
+    </html>
   );
 }

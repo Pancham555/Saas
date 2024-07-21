@@ -1,5 +1,4 @@
 "use client";
-import { RootState } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { UserContext, UserCredentialsProps } from "@/context/userCredentials";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export default function Settings() {
-  const user = useSelector((state: RootState) => state.reducer);
   const [frontUser, setFrontUser] = useState({
     id: "",
     kindeId: "",
@@ -43,16 +41,25 @@ export default function Settings() {
     }
   };
 
-  const InitialData = async () => {
-    try {
-      const data = await axios.get(`/api/settings?id=${user.id}`);
+  const { userCredentials }: { userCredentials: UserCredentialsProps } =
+    useContext(UserContext);
 
-      setFrontUser(data.data.data);
-    } catch (error) {}
-  };
+  const InitialData = useCallback(async () => {
+    try {
+      const data = await axios.get(`/api/settings?id=${userCredentials?.id}`);
+      if (data.status === 200) {
+        setFrontUser(data.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userCredentials]);
+
   useEffect(() => {
-    InitialData();
-  }, []);
+    if (userCredentials) {
+      InitialData();
+    }
+  }, [userCredentials]);
 
   return (
     <main className="space-x-5 space-y-5 m-5 py-14">
@@ -69,7 +76,7 @@ export default function Settings() {
                 <Input
                   id="fullname"
                   placeholder="Your Full Name"
-                  value={frontUser.firstName}
+                  value={frontUser?.firstName}
                   onChange={(e) =>
                     setFrontUser({ ...frontUser, firstName: e.target.value })
                   }
@@ -80,7 +87,7 @@ export default function Settings() {
                 <Input
                   id="fullname"
                   placeholder="Your Full Name"
-                  value={frontUser.lastName}
+                  value={frontUser?.lastName}
                   onChange={(e) =>
                     setFrontUser({ ...frontUser, lastName: e.target.value })
                   }
@@ -91,7 +98,7 @@ export default function Settings() {
                 <Input
                   id="email"
                   placeholder="Your email"
-                  value={frontUser.email}
+                  value={frontUser?.email}
                   onChange={(e) =>
                     setFrontUser({ ...frontUser, email: e.target.value })
                   }

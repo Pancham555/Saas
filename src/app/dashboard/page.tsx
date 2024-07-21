@@ -1,11 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { CreditCard, DollarSign, Package, Package2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { UserContext, UserCredentialsProps } from "@/context/userCredentials";
 
 interface DashboardDataProps {
   sales: number;
@@ -39,18 +38,26 @@ interface DataProps {
 }
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardDataProps>();
-  const user = useSelector((state: RootState) => state.reducer);
-  const getData = async () => {
+
+  const { userCredentials }: { userCredentials: UserCredentialsProps } =
+    useContext(UserContext);
+
+  const getData = useCallback(async () => {
     try {
-      const data = await axios.get(`/api/dashboard?userId=${user.id}`);
+      const data = await axios.get(
+        `/api/dashboard?userId=${userCredentials.id}`
+      );
       setDashboardData(data.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [userCredentials]);
+
   useEffect(() => {
-    getData();
-  }, []);
+    if (userCredentials) {
+      getData();
+    }
+  }, [userCredentials]);
 
   return (
     <main className="flex flex-1 flex-col gap-4 md:gap-8 m-5 py-14">

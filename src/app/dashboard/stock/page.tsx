@@ -1,16 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Payment } from "./components/table/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
 import TableComponent from "./components/table";
 import NoDataFound from "./components/noDataFound";
 import ItemForm from "./components/itemForm";
 import PaginationButtons from "./components/paginationButtons";
 import PageSize from "./components/pageSize";
 import axios from "axios";
+import { UserContext, UserCredentialsProps } from "@/context/userCredentials";
 
 interface PaginationProps {
   skip: number;
@@ -24,7 +23,6 @@ export default function Stock() {
   const [items, setItems] = useState<Payment[]>([]);
   const pageSize = 3;
   const [dataPresent, setDataPresent] = useState<boolean>(false);
-  const user = useSelector((state: RootState) => state.reducer);
   const [paginationNums, setPaginationNums] = useState<PaginationProps>({
     skip: 0,
     take: pageSize,
@@ -36,11 +34,15 @@ export default function Stock() {
 
   const [docCount, setDocCount] = useState(0);
   const [sum, setSum] = useState(0);
+
+  const { userCredentials }: { userCredentials: UserCredentialsProps } =
+    useContext(UserContext);
+
   const { toast } = useToast();
-  const getInitialData = async () => {
+  const getInitialData = useCallback(async () => {
     try {
       const data = await axios.get(
-        `/api/stock?userId=${user.id}&skip=${paginationNums?.skip}&take=${pageSize}`
+        `/api/stock?userId=${userCredentials.id}&skip=${paginationNums?.skip}&take=${pageSize}`
       );
 
       setItems(data.data.data.data);
@@ -49,18 +51,16 @@ export default function Stock() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [userCredentials, paginationNums, pageSize]);
+
   const AddData = async () => {
     setDialogTrigger(false);
-    // if (!item?.payment_status) {
-    //   return toast({ title: "Enter your payment status" });
-    // }
     try {
       const data = await axios.post(
         "/api/stock",
         {
           ...item,
-          userId: user.id,
+          userId: userCredentials.id,
         },
         { withCredentials: true }
       );
@@ -79,10 +79,11 @@ export default function Stock() {
       console.log(error);
     }
   };
+
   const deleteItem = async ({ id }: { id: string }) => {
     try {
       await axios.post("/api/stock/delete", {
-        userId: user.id,
+        userId: userCredentials.id,
         stockId: id,
       });
 
@@ -100,7 +101,7 @@ export default function Stock() {
     setDialogTrigger(false);
     try {
       await axios.put("/api/stock", {
-        id: user.id,
+        id: userCredentials.id,
         stockId: updateId,
         ...item,
       });
@@ -117,7 +118,9 @@ export default function Stock() {
   };
 
   useEffect(() => {
-    getInitialData();
+    if (userCredentials) {
+      getInitialData();
+    }
     // paginationNums.skip === 0
     if (paginationNums.skip === 0) {
       setHighLightButtons({
@@ -151,7 +154,7 @@ export default function Stock() {
     if (items.length > 0) {
       setDataPresent(true);
     }
-  }, [item, paginationNums, docCount, pageSize, sum]);
+  }, [item, paginationNums, docCount, pageSize, sum, userCredentials]);
   return (
     <>
       <ItemForm

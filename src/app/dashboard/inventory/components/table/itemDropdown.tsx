@@ -1,5 +1,3 @@
-import { change } from "@/app/redux_slices/inventoryDelete";
-import { RootState } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,24 +8,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
+import { UserContext } from "@/context/userCredentials";
 import axios from "axios";
 import { MoreHorizontal } from "lucide-react";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext } from "react";
 
 export default function ItemDropdown({ id }: { id: string }) {
-  const user = useSelector((state: RootState) => state.reducer);
+  const { userCredentials, setUserCredentials } = useContext(UserContext);
   // const inventoryDeleteId = useSelector(
   //   (state: RootState) => state.inventoryDelete.value
   // );
-  const dispatch = useDispatch();
   const { toast } = useToast();
 
   const deleteItem = async () => {
-    dispatch(change({ value: id }));
     try {
       const data = await axios.post("/api/inventory/delete", {
-        userId: user.id,
+        userId: userCredentials.id,
         inventoryId: id,
       });
       if (data.status === 200) {
@@ -35,8 +31,6 @@ export default function ItemDropdown({ id }: { id: string }) {
           title: "Item Deleted",
         });
       }
-
-      dispatch(change({ value: "" }));
     } catch (error) {
       console.log(error);
     }

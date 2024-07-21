@@ -34,20 +34,21 @@ import { usePathname } from "next/navigation";
 import Logo from "@/components/logo";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import ThemeButton from "@/components/themeButton";
-
-import { useDispatch, useSelector } from "react-redux";
-import { change } from "../redux_slices/auth";
-import { RootState } from "../store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-interface StateProps {
-  authenticated?: boolean;
-  id?: string;
-  message?: string;
-}
-
+import { UserContext, UserCredentialsProps } from "@/context/userCredentials";
+// interface StateProps {
+//   authenticated: boolean;
+//   id?: string;
+//   message?: string;
+//   picture: string;
+//   given_name: string;
+//   family_name: string;
+//   email: string;
+//   phone_number: string | number | null;
+// }
 export default function DashboardLayout({
   children,
 }: Readonly<{
@@ -55,7 +56,6 @@ export default function DashboardLayout({
 }>) {
   const pathname = usePathname();
   const router = useRouter();
-  const dispatch = useDispatch();
   const dashboardRoutes = [
     {
       link: "/dashboard",
@@ -88,22 +88,28 @@ export default function DashboardLayout({
       name: "Settings",
     },
   ];
-  const [state, setState] = useState<StateProps | undefined>();
-  const user = useSelector((state: RootState) => state.reducer);
+
+  const {
+    userCredentials,
+    setUserCredentials,
+  }: { userCredentials: UserCredentialsProps; setUserCredentials: Function } =
+    useContext(UserContext);
   const checkAuth = useCallback(async () => {
     try {
       const data = await axios.get("/api/protected");
-      setState(await { ...data.data.data });
-      dispatch(change({ ...user, email: `${data.data.data.email}` }));
+      setUserCredentials(await { ...data.data.data });
     } catch (error) {
       console.log(error);
       router.push("/");
     }
-  }, [dispatch, router, user]);
+  }, [router, userCredentials]);
+  // user
+
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
-  if (state === undefined) {
+  }, []);
+
+  if (!userCredentials) {
     return <p className="p-5">Loading...</p>;
   }
   return (
@@ -238,13 +244,11 @@ export default function DashboardLayout({
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 <Avatar>
-                  {/* @ts-ignore */}
-                  <AvatarImage src={user.picture} />
-                  <AvatarFallback>{`${user.given_name[0] ?? "A"}${
-                    user.family_name[0] ?? "B"
+                  <AvatarImage src={userCredentials?.picture} />
+                  <AvatarFallback>{`${userCredentials?.given_name?.[0] ?? "A"}${
+                    userCredentials?.family_name?.[0] ?? "B"
                   }`}</AvatarFallback>
                 </Avatar>
-                {/* <CircleUser className="h-5 w-5" /> */}
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>

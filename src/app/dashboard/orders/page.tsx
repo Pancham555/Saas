@@ -1,16 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Payment } from "./components/table/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
 import TableComponent from "./components/table";
 import NoDataFound from "./components/noDataFound";
 import ItemForm from "./components/itemForm";
 import PaginationButtons from "./components/paginationButtons";
 import PageSize from "./components/pageSize";
 import axios from "axios";
+import { UserContext, UserCredentialsProps } from "@/context/userCredentials";
 
 interface PaginationProps {
   skip: number;
@@ -30,7 +29,6 @@ const Orders = () => {
   const [sendStockList, setSendStockList] = useState([]);
   const pageSize = 3;
   const [dataPresent, setDataPresent] = useState<boolean>(false);
-  const user = useSelector((state: RootState) => state.reducer);
   const [paginationNums, setPaginationNums] = useState<PaginationProps>({
     skip: 0,
     take: pageSize,
@@ -44,10 +42,13 @@ const Orders = () => {
   const [sum, setSum] = useState(0);
   const { toast } = useToast();
 
-  const getInitialData = async () => {
+  const { userCredentials }: { userCredentials: UserCredentialsProps } =
+    useContext(UserContext);
+
+  const getInitialData = useCallback(async () => {
     try {
       const data = await axios.get(
-        `/api/orders?userId=${user.id}&skip=${paginationNums?.skip}&take=${pageSize}`
+        `/api/orders?userId=${userCredentials.id}&skip=${paginationNums?.skip}&take=${pageSize}`
       );
 
       setItems(data.data.data.data);
@@ -57,7 +58,7 @@ const Orders = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [userCredentials, paginationNums, pageSize]);
 
   const AddData = async () => {
     setDialogTrigger(false);
@@ -70,7 +71,7 @@ const Orders = () => {
         {
           ...item,
           order_items: sendStockList,
-          id: user.id,
+          id: userCredentials.id,
         },
         { withCredentials: true }
       );
@@ -95,7 +96,7 @@ const Orders = () => {
   const deleteItem = async ({ id }: { id: string }) => {
     try {
       await axios.post("/api/orders/delete", {
-        userId: user.id,
+        userId: userCredentials.id,
         orderId: id,
       });
 
@@ -114,7 +115,7 @@ const Orders = () => {
 
     try {
       await axios.put("/api/orders", {
-        id: user.id,
+        id: userCredentials.id,
         orderId: updateId,
         order_items: sendStockList,
         ...item,
@@ -133,7 +134,9 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    getInitialData();
+    if (userCredentials) {
+      getInitialData();
+    }
 
     if (paginationNums.skip === 0) {
       setHighLightButtons({
@@ -160,7 +163,15 @@ const Orders = () => {
     if (items.length > 0) {
       setDataPresent(true);
     }
-  }, [item, paginationNums, docCount, pageSize, sum, sendStockList, user]);
+  }, [
+    item,
+    paginationNums,
+    docCount,
+    pageSize,
+    sum,
+    sendStockList,
+    userCredentials,
+  ]);
 
   return (
     <>
